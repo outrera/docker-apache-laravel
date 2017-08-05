@@ -2,10 +2,13 @@
 # Use an official PHP runtime as a parent image
 FROM php:7.1-apache
 
+ENV RUN_MODE="prod"
 ENV DB_SERVER=localhost
 ENV DB_PORT=3306
 ENV DB_USER=root
 ENV DB_PASS=root
+
+EXPOSE 80
 
 ADD conf /tmp/conf
 
@@ -32,6 +35,10 @@ RUN docker-php-source extract; \
         mbstring \
         libxml; \
     docker-php-source delete
+
+# Install composer
+RUN /usr/bin/curl -sS https://getcomposer.org/installer | /usr/local/bin/php; \
+    /bin/mv composer.phar /usr/local/bin/composer
 
 # Set the working directory to /var/www/html
 WORKDIR /var/www/html
