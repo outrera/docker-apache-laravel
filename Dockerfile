@@ -4,6 +4,7 @@ FROM php:7.1-apache
 
 ENV RUN_MODE="prod"
 ENV SERVER_ROOT="/var/www/html"
+ENV CLEAR_SERVER_ROOT=0
 ENV DB_SERVER=localhost
 ENV DB_PORT=3306
 ENV DB_USER=root

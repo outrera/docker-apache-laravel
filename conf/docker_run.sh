@@ -4,7 +4,11 @@
 if [ ! -f /var/www/html/composer.lock ]; then
     echo "* Installing Laravel"
 
-    rm -rf /var/www/html/*
+    if [ $CLEAR_SERVER_ROOT == 1 ]; then
+        rm -rf "$SERVER_ROOT/*"
+    else
+        echo "* Laravel won't install if directory isn't empty"
+    fi
 
     if [ $RUN_MODE == "prod" -o $RUN_MODE == "production" ]; then
         /usr/local/bin/composer create-project laravel/laravel "$SERVER_ROOT" --no-dev --prefer-dist
