@@ -33,7 +33,7 @@ fi
 php artisan key:generate
 
 ## Install/Update npm packages
-if [ ! -f /var/www/html/package.json ]; then
+if [ -f /var/www/html/package.json ]; then
     if [ ! -f /var/www/html/package-lock.json ]; then
         echo "* Downloading npm packages"
         /usr/local/bin/npm install
@@ -43,7 +43,6 @@ if [ ! -f /var/www/html/package.json ]; then
     fi
 
     # Setup npm based on run mode
-    echo "* Running npm setup"
     if [ $RUN_MODE == "prod" -o $RUN_MODE == "production" ]; then
         npm run prod
     else
