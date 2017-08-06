@@ -1,8 +1,9 @@
 
-# Use an official PHP runtime as a parent image
+# Use an webdevops PHP runtime as a parent image
 FROM php:7.1-apache
 
 ENV RUN_MODE="prod"
+ENV SERVER_ROOT="/var/www/html"
 ENV DB_SERVER=localhost
 ENV DB_PORT=3306
 ENV DB_USER=root

@@ -1,16 +1,16 @@
 #!/bin/bash
 
 ### Install laravel
-if [ ! -f ./composer.lock ]; then
+if [ ! -f /var/www/html/composer.lock ]; then
     echo "* Installing Laravel"
+
+    rm -rf /var/www/html/*
 
     if [ $RUN_MODE == "prod" -o $RUN_MODE == "production" ]; then
         /usr/local/bin/composer create-project laravel/laravel "$SERVER_ROOT" --no-dev --prefer-dist
     else
         /usr/local/bin/composer create-project laravel/laravel "$SERVER_ROOT"
     fi
-
-    /bin/chown www-data:www-data -R "$SERVER_ROOT/storage" "$SERVER_ROOT/bootstrap/cache"
 else
     echo "* Updating composer packages"
 
@@ -23,24 +23,28 @@ else
     fi
 fi
 
+/bin/chown www-data:www-data -R "$SERVER_ROOT/storage" "$SERVER_ROOT/bootstrap/cache"
+
 # Generate new app key
 php artisan key:generate
 
 ## Install/Update npm packages
-if [ ! -f ./package-lock.json ]; then
-    echo "* Downloading npm packages"
-    /usr/local/bin/npm install
-else
-    echo "* Updating npm packages"
-    /usr/local/bin/npm update
-fi
+if [ ! -f /var/www/html/package.json ]; then
+    if [ ! -f /var/www/html/package-lock.json ]; then
+        echo "* Downloading npm packages"
+        /usr/local/bin/npm install
+    else
+        echo "* Updating npm packages"
+        /usr/local/bin/npm update
+    fi
 
-# Setup npm based on run mode
-echo "* Running npm setup"
-if [ $RUN_MODE == "prod" -o $RUN_MODE == "production" ]; then
-    npm run prod
-else
-    npm run watch &
+    # Setup npm based on run mode
+    echo "* Running npm setup"
+    if [ $RUN_MODE == "prod" -o $RUN_MODE == "production" ]; then
+        npm run prod
+    else
+        npm run watch &
+    fi
 fi
 
 
