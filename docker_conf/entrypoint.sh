@@ -1,5 +1,14 @@
 #!/bin/bash
 
+
+# Warn
+if [ $RUN_MODE == "prod" -o $RUN_MODE == "production" ]; then
+    echo "* Running container in production mode"
+else
+    echo "* Running container in dev mode"
+fi
+
+
 ### Install laravel
 if [ ! -f /var/www/html/composer.lock ]; then
     echo "* Installing Laravel"
@@ -30,7 +39,7 @@ fi
 /bin/chown www-data:www-data -R "$SERVER_ROOT/storage" "$SERVER_ROOT/bootstrap/cache"
 
 # Generate new app key
-php artisan key:generate
+/usr/local/bin/php artisan key:generate &
 
 ## Install/Update npm packages
 if [ -f /var/www/html/package.json ]; then
@@ -45,7 +54,7 @@ if [ -f /var/www/html/package.json ]; then
     # Setup npm based on run mode
     if [ $RUN_MODE == "prod" -o $RUN_MODE == "production" ]; then
         npm run prod
-    else
+    elif [ $RUN_NPM_WATCH == 1 ]; then
         npm run watch &
     fi
 fi
