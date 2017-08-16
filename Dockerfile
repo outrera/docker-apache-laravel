@@ -3,7 +3,9 @@
 FROM php:7.1-apache
 
 ENV RUN_MODE="prod" \
+    COMPOSER_UPDATE=0 \
     RUN_NPM_WATCH=0 \
+    NPM_UPDATE=0 \
     SERVER_ROOT="/var/www/html" \
     CLEAR_SERVER_ROOT=0 \
     DB_SERVER=localhost \

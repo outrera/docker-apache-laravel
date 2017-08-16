@@ -24,7 +24,7 @@ if [ ! -f /var/www/html/composer.lock ]; then
     else
         /usr/local/bin/composer create-project laravel/laravel "$SERVER_ROOT"
     fi
-else
+elif [ $COMPOSER_UPDATE == 1 ]; then
     echo "* Updating composer packages"
 
     cp .env.example .env
@@ -39,14 +39,14 @@ fi
 /bin/chown www-data:www-data -R "$SERVER_ROOT/storage" "$SERVER_ROOT/bootstrap/cache"
 
 # Generate new app key
-/usr/local/bin/php artisan key:generate &
+/usr/local/bin/php artisan key:generate > /dev/null &
 
 ## Install/Update npm packages
 if [ -f /var/www/html/package.json ]; then
     if [ ! -f /var/www/html/package-lock.json ]; then
         echo "* Downloading npm packages"
         /usr/local/bin/npm install
-    else
+    elif [ $NPM_UPDATE == 1 ]; then
         echo "* Updating npm packages"
         /usr/local/bin/npm update
     fi
@@ -70,6 +70,9 @@ fi
 
 /usr/sbin/a2dissite '*'
 /usr/sbin/a2ensite 000-laravel 001-laravel-ssl
+
+# Enable apache rewrite
+a2enmod rewrite
 
 echo "* Almost ready, starting apache"
 
