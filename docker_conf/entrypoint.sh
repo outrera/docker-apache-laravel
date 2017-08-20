@@ -8,56 +8,10 @@ else
     echo "* Running container in dev mode"
 fi
 
-
-### Install laravel
-if [ ! -f /var/www/html/composer.lock ]; then
-    echo "* Installing Laravel"
-
-    if [ $CLEAR_SERVER_ROOT == 1 ]; then
-        rm -rf "$SERVER_ROOT/*"
-    else
-        echo "* Laravel won't install if directory isn't empty"
-    fi
-
-    if [ $RUN_MODE == "prod" -o $RUN_MODE == "production" ]; then
-        /usr/local/bin/composer create-project laravel/laravel "$SERVER_ROOT" --no-dev --prefer-dist
-    else
-        /usr/local/bin/composer create-project laravel/laravel "$SERVER_ROOT"
-    fi
-elif [ $COMPOSER_UPDATE == 1 ]; then
-    echo "* Updating composer packages"
-
-    cp .env.example .env
-
-    if [ $RUN_MODE == "prod" -o $RUN_MODE == "production" ]; then
-        /usr/local/bin/composer update --no-dev --prefer-dist
-    else
-        /usr/local/bin/composer update
-    fi
-fi
-
 /bin/chown www-data:www-data -R "$SERVER_ROOT/storage" "$SERVER_ROOT/bootstrap/cache"
 
 # Generate new app key
 /usr/local/bin/php artisan key:generate > /dev/null &
-
-## Install/Update npm packages
-if [ -f /var/www/html/package.json ]; then
-    if [ ! -f /var/www/html/package-lock.json ]; then
-        echo "* Downloading npm packages"
-        /usr/local/bin/npm install
-    elif [ $NPM_UPDATE == 1 ]; then
-        echo "* Updating npm packages"
-        /usr/local/bin/npm update
-    fi
-
-    # Setup npm based on run mode
-    if [ $RUN_MODE == "prod" -o $RUN_MODE == "production" ]; then
-        npm run prod
-    elif [ $RUN_NPM_WATCH == 1 ]; then
-        npm run watch &
-    fi
-fi
 
 
 ### Setup apache for laravel
