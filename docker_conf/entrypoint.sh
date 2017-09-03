@@ -41,7 +41,7 @@ fi
 a2enmod rewrite
 
 if [ $RUN_MODE == "prod" -o $RUN_MODE == "production" ]; then
-    a2enmod headers
+    a2enmod headers cache_disk
 fi
 
 echo "* Almost ready, starting apache"
