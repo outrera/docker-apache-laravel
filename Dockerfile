@@ -1,5 +1,5 @@
 
-# Use an webdevops PHP runtime as a parent image
+# Use an official PHP runtime as a parent image
 FROM php:7.1-apache
 
 ENV RUN_MODE="prod" \
@@ -41,7 +41,7 @@ RUN curl -sS https://nodejs.org/dist/v8.4.0/node-"$NODE_VER".tar.xz > /tmp/node-
     ln -s /usr/local/etc/nodejs/bin/node /usr/local/bin/node && \
     ln -s /usr/local/etc/nodejs/bin/npm /usr/local/bin/npm
 
-# Install basic laravel dependencies
+# Install basic laravel php dependencies
 RUN docker-php-source extract && \
     docker-php-ext-install \
         tokenizer \
