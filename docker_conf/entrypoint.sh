@@ -37,7 +37,7 @@ fi
 /usr/sbin/a2dissite '*'
 /usr/sbin/a2ensite 000-laravel 001-laravel-ssl
 
-# Enable apache mods: rewrite, headers
+# Enable apache mods
 a2enmod rewrite
 
 if [ $RUN_MODE == "prod" -o $RUN_MODE == "production" ]; then

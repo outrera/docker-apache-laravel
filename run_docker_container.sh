@@ -1,11 +1,13 @@
 #!/bin/bash
 # Run this file to launch a Docker container
 
-docker build -t quentincaffeino/apache-laravel:latest .
+CONTAINER_NAME=quentincaffeino/apache-laravel:latest
+
+docker build -t $CONTAINER_NAME .
 
 # Start bot container
 docker run --rm -d \
-    --name apache-laravel \
-    -t quentincaffeino/apache-laravel:latest
+  --name apache-laravel \
+  -t $CONTAINER_NAME
 
-docker exec -it apache-laravel bash
+docker exec -it $CONTAINER_NAME bash
